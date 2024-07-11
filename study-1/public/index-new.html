@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Selection Demo</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="myCanvas" width="500" height="500"></canvas>
+<script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    const backgroundImage = new Image();
+    backgroundImage.src = '/Images/Cofee.png'; // 替换为你的图片路径
+    backgroundImage.onload = () => {
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    };
+    let isDrawing = false;
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+        startX = e.offsetX;
+        startY = e.offsetY;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDrawing) {
+            endX = e.offsetX;
+            endY = e.offsetY;
+            draw();
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDrawing = false;
+        const rect = {
+            x: Math.min(startX, endX),
+            y: Math.min(startY, endY),
+            width: Math.abs(endX - startX),
+            height: Math.abs(endY - startY)
+        };
+        console.log(rect, 'rect')
+    });
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height); // 绘制背景图片
+        // ctx.fillStyle = "#FF0000"; // 设置填充颜色
+        ctx.beginPath();
+        ctx.rect(startX, startY, endX - startX, endY - startY);
+        //ctx.fill(); // 填充矩形
+        ctx.stroke(); // 绘制矩形边框
+    }
+</script>
+</body>
+</html>

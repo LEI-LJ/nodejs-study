@@ -1,0 +1,1 @@
+添加canvas选择 在uniapp中适配
