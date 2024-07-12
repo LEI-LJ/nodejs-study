@@ -1,16 +1,23 @@
 if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
+  require('dotenv').config()
 }
-console.log(process.env.STRIPE_SECRET_KEY, 'process.env.NODE_ENV')
+
+const DARKSKY_API_KEY = process.env.DARKSKY_API_KEY
+const axios = require('axios')
 const express = require('express')
 const app = express()
 
-const fs = require('fs')
-
-app.set('view engine', 'ejs')
+app.use(express.json())
 app.use(express.static('public'))
-app.get('/store', function (req, res) {
 
+app.post('/weather', (req, res) => {
+  const url = `https://api.darksky.net/forecast/${DARKSKY_API_KEY}/${req.body.latitude},${req.body.longitude}?units=auto`
+  axios({
+    url: url,
+    responseType: 'json'
+  }).then(data => res.json(data.data.currently))
 })
 
-app.listen(3001)
+app.listen(3000, () => {
+  console.log('Server Started')
+})
